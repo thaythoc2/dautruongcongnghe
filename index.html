@@ -1,70 +1,364 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đấu Trường Công Nghệ</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .card {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            max-width: 450px;
-            width: 100%;
-            text-align: center;
-            padding: 35px 25px;
-        }
-        h1 {
-            color: #1e3c72;
-            font-size: 24px;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-        }
-        p {
-            color: #555;
-            font-size: 15px;
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-        .btn-start {
-            display: inline-block;
-            width: 100%;
-            padding: 14px 20px;
-            background: #ff7a18;
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-            border-radius: 8px;
-            transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(255, 122, 24, 0.4);
-        }
-        .btn-start:hover {
-            background: #e56910;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Đấu Trường Công Nghệ 6-7-8-9 | THCS Ninh Hòa</title>
+  <style>
+    :root { --primary: #4f46e5; --primary-dark: #3730a3; --secondary: #f59e0b; --success: #10b981; --danger: #ef4444; --card: #ffffff; --text: #1f2937; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 10px; color: var(--text); }
+    .app-container { background: var(--card); width: 100%; max-width: 480px; border-radius: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.25); overflow: hidden; display: flex; flex-direction: column; min-height: 88vh; }
+    .header { background: var(--primary); color: white; padding: 14px 16px; text-align: center; }
+    .header h1 { font-size: 1.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .header p { font-size: 0.8rem; opacity: 0.9; margin-top: 2px; }
+    .screen { display: none; padding: 18px; flex: 1; flex-direction: column; justify-content: space-between; }
+    .screen.active { display: flex; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .input-row { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin: 14px 0; text-align: left; }
+    .input-group label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 0.85rem; color: #4b5563; }
+    .input-group input { width: 100%; padding: 11px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 0.95rem; outline: none; }
+    .input-group input:focus { border-color: var(--primary); }
+    .grade-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    .btn-grade { padding: 14px 12px; border: none; border-radius: 14px; font-size: 0.98rem; font-weight: 700; color: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.1s; }
+    .btn-grade:active { transform: scale(0.97); }
+    .btn-cn6 { background: linear-gradient(135deg, #10b981, #059669); }
+    .btn-cn7 { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+    .btn-cn8 { background: linear-gradient(135deg, #0ea5e9, #2563eb); }
+    .btn-cn9 { background: linear-gradient(135deg, #f59e0b, #ea580c); }
+    .rank-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .btn-rank-view { padding: 8px 4px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 10px; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+    .stats-bar { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 10px 14px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #e2e8f0; font-weight: 700; font-size: 0.9rem; }
+    .combo-badge { background: #fef3c7; color: #d97706; padding: 3px 8px; border-radius: 20px; font-size: 0.8rem; }
+    .progress-wrap { width: 100%; height: 8px; background: #e5e7eb; border-radius: 99px; overflow: hidden; margin-bottom: 12px; }
+    .progress-fill { height: 100%; background: var(--secondary); width: 0%; transition: width 0.3s ease; }
+    .round-badge { display: inline-block; background: #e0e7ff; color: var(--primary-dark); padding: 4px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 700; margin-bottom: 8px; }
+    .context-box { background: #fffbeb; border-left: 4px solid var(--secondary); padding: 8px 12px; border-radius: 8px; font-size: 0.82rem; color: #92400e; margin-bottom: 10px; display: none; }
+    .question-text { font-size: 1.05rem; font-weight: 700; line-height: 1.45; margin-bottom: 14px; color: #111827; }
+    .options-list { display: flex; flex-direction: column; gap: 9px; margin-bottom: 14px; }
+    .option-btn { width: 100%; text-align: left; padding: 12px 14px; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 0.94rem; font-weight: 500; color: var(--text); cursor: pointer; line-height: 1.35; }
+    .tf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+    .tf-btn { padding: 18px; font-size: 1.15rem; font-weight: 800; text-align: center; border-radius: 14px; border: 2px solid #e5e7eb; background: #f9fafb; cursor: pointer; }
+    .correct { background: #d1fae5 !important; border-color: var(--success) !important; color: #065f46 !important; font-weight: 700; }
+    .wrong { background: #fee2e2 !important; border-color: var(--danger) !important; color: #991b1b !important; }
+    .feedback-box { padding: 12px; border-radius: 12px; margin-bottom: 14px; font-size: 0.88rem; line-height: 1.4; display: none; }
+    .feedback-box.show { display: block; }
+    .feedback-correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+    .feedback-wrong { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .next-btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; display: none; margin-top: auto; }
+    .next-btn.show { display: block; }
+    .leaderboard-box { margin-top: 12px; background: #f8fafc; border-radius: 14px; padding: 10px; border: 1px solid #e2e8f0; max-height: 210px; overflow-y: auto; text-align: left; }
+    .lb-title { font-weight: 800; font-size: 0.88rem; color: var(--primary-dark); margin-bottom: 6px; text-align: center; text-transform: uppercase; }
+    .lb-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .lb-table th { color: #6b7280; font-weight: 600; padding: 5px 4px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+    .lb-table td { padding: 6px 4px; border-bottom: 1px solid #f1f5f9; font-weight: 500; }
+    .btn-restart { width: 100%; padding: 14px; background: var(--secondary); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 12px; }
+    .status-pill { display: inline-block; font-size: 0.78rem; padding: 4px 10px; border-radius: 20px; background: #e0e7ff; color: #3730a3; margin-top: 6px; font-weight: 600; }
+  </style>
 </head>
 <body>
+<div class="app-container">
+  <div class="header">
+    <h1>Đấu Trường Công Nghệ</h1>
+    <p>Trường THCS Ninh Hòa • Ôn tập Giữa HKI</p>
+  </div>
 
-    <div class="card">
-        <h1>Đấu Trường Công Nghệ</h1>
-        <p>Chào mừng các em học sinh tham gia sân chơi kiến thức Công nghệ 6,7,8,9! Nhấn vào nút ba chấm ở góc trên bên phải zalo và chọn "Mở bằng trình duyệt", sau đó Nhấn vào nút bên dưới để bắt đầu thử thách.</p>
-        <a class="btn-start" href="https://script.google.com/macros/s/AKfycbyNrATiJSEqkg_vU3LhAVjGWf_ct8MJ-xYTEgVNFtEzqQF9AD7HF_-a0e_cT9kdlI6_/exec">BẮT ĐẦU VÀO THI</a>
+  <!-- MÀN HÌNH CHÍNH -->
+  <div id="homeScreen" class="screen active">
+    <div style="text-align: center; margin: auto 0;">
+      <div style="font-size: 3rem;">🚀</div>
+      <h2 style="font-size: 1.25rem;">Nhập thông tin thi đấu</h2>
+      <div id="loadStatus" class="status-pill">⏳ Đang kết nối ngân hàng đề...</div>
+
+      <div class="input-row">
+        <div class="input-group">
+          <label>Họ và tên học sinh:</label>
+          <input type="text" id="playerName" placeholder="Nguyễn Văn A">
+        </div>
+        <div class="input-group">
+          <label>Lớp:</label>
+          <input type="text" id="playerClass" placeholder="9/1">
+        </div>
+      </div>
+
+      <div class="grade-grid">
+        <button class="btn-grade btn-cn6" onclick="startGame(6)"><span>🏠 CÔNG NGHỆ 6</span><small>Vào thi ➔</small></button>
+        <button class="btn-grade btn-cn7" onclick="startGame(7)"><span>🌱 CÔNG NGHỆ 7</span><small>Vào thi ➔</small></button>
+        <button class="btn-grade btn-cn8" onclick="startGame(8)"><span>📐 CÔNG NGHỆ 8</span><small>Vào thi ➔</small></button>
+        <button class="btn-grade btn-cn9" onclick="startGame(9)"><span>⚙️ CÔNG NGHỆ 9</span><small>Vào thi ➔</small></button>
+      </div>
+
+      <div class="rank-grid">
+        <button class="btn-rank-view" onclick="viewTop(6)">🏆 Top K6</button>
+        <button class="btn-rank-view" onclick="viewTop(7)">🏆 Top K7</button>
+        <button class="btn-rank-view" onclick="viewTop(8)">🏆 Top K8</button>
+        <button class="btn-rank-view" onclick="viewTop(9)">🏆 Top K9</button>
+      </div>
+
+      <div id="homeLeaderboard" class="leaderboard-box" style="display:none;"></div>
     </div>
+    <p style="text-align: center; font-size: 0.75rem; color: #9ca3af; margin-top: 8px;">Tổ KHTN & Công nghệ - THCS Ninh Hòa</p>
+  </div>
 
+  <!-- MÀN HÌNH CHƠI GAME -->
+  <div id="gameScreen" class="screen">
+    <div>
+      <div class="stats-bar">
+        <div>🏆 Điểm: <span id="scoreVal">0</span></div>
+        <div><span class="combo-badge" id="comboVal">🔥 Combo x0</span></div>
+        <div>📋 <span id="qCountVal">1/40</span></div>
+      </div>
+      <div class="progress-wrap"><div class="progress-fill" id="progressBar"></div></div>
+      <div class="round-badge" id="roundBadge">VÒNG 1</div>
+      <div class="context-box" id="contextBox"></div>
+      <div class="question-text" id="questionText">Đang tải câu hỏi...</div>
+      <div id="optionsContainer" class="options-list"></div>
+      <div id="feedbackBox" class="feedback-box"></div>
+    </div>
+    <button id="nextBtn" class="next-btn" onclick="nextQuestion()">Câu tiếp theo ➔</button>
+  </div>
+
+  <!-- MÀN HÌNH KẾT QUẢ -->
+  <div id="resultScreen" class="screen">
+    <div style="text-align: center; margin: auto 0;">
+      <h2 style="font-size: 1.25rem;">🎉 Hoàn thành bài thi!</h2>
+      <p id="playerSummary" style="color: #6b7280; font-size: 0.88rem; margin-top: 2px;"></p>
+      <div style="background: linear-gradient(135deg, #4f46e5, #9333ea); color: white; padding: 12px; border-radius: 16px; margin: 10px 0; display: flex; justify-content: space-around; align-items: center;">
+        <div>
+          <div style="font-size: 2rem; font-weight: 800;" id="finalScore">0</div>
+          <div style="font-size: 0.72rem; opacity: 0.9;">TỔNG ĐIỂM</div>
+        </div>
+        <div style="text-align: left; font-size: 0.84rem; line-height: 1.5;">
+          <div>✅ Đúng: <strong id="correctTotal">0</strong></div>
+          <div>🔥 Max Combo: <strong id="maxComboTotal">0</strong></div>
+          <div>🎖️ <strong id="rankTitle">Kỹ sư Tập sự</strong></div>
+        </div>
+      </div>
+      <div id="saveStatus" style="font-size: 0.82rem; color: #059669; font-weight: 600; margin-bottom: 4px;">⏳ Đang lưu điểm...</div>
+      <div class="leaderboard-box">
+        <div class="lb-title">🏆 BẢNG VÀNG TOP 10</div>
+        <div id="lbContent" style="text-align: center; color: #6b7280; font-size: 0.82rem;">Đang tải...</div>
+      </div>
+      <button class="btn-restart" onclick="goHome()">🔄 Chơi lại / Về trang chủ</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // =========================================================================
+  // ANH THỌ DÁN LINK WEB APP (/exec) CỦA GOOGLE APPS SCRIPT VÀO DÒNG DƯỚI ĐÂY:
+  // =========================================================================
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXrGoQyvu01zSSrQAXgArOGZa02qB0xDr53fKyRIzrgaR1wW0g5fBi7qBy9QBzvhkK/exec";
+
+  let ALL_DATA = {};
+  let questions = [], currentIndex = 0, score = 0, combo = 0, maxCombo = 0, correctCount = 0, currentGrade = 9;
+  let studentName = "", studentClass = "";
+
+  // Tự động tải ngân hàng câu hỏi 4 khối từ Google Sheet khi mở trang
+  window.onload = async function() {
+    const statusEl = document.getElementById('loadStatus');
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=getQuestions`);
+      ALL_DATA = await res.json();
+      statusEl.innerText = "✅ Đã sẵn sàng thi đấu (Khối 6, 7, 8, 9)";
+      statusEl.style.background = "#d1fae5";
+      statusEl.style.color = "#065f46";
+    } catch (err) {
+      statusEl.innerText = "⚠️ Vui lòng kiểm tra kết nối mạng hoặc SCRIPT_URL";
+      statusEl.style.background = "#fee2e2";
+      statusEl.style.color = "#991b1b";
+    }
+  };
+
+  function shuffle(arr) {
+    let a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function startGame(grade) {
+    studentName = document.getElementById('playerName').value.trim();
+    studentClass = document.getElementById('playerClass').value.trim();
+    if (!studentName || !studentClass) {
+      alert("Các em vui lòng nhập đầy đủ Họ tên và Lớp trước khi bắt đầu nhé!");
+      return;
+    }
+    if (!ALL_DATA[grade]) {
+      alert("Đang tải dữ liệu câu hỏi từ máy chủ, vui lòng chờ 2 giây rồi bấm lại nhé!");
+      return;
+    }
+
+    currentGrade = grade;
+    const raw = ALL_DATA[grade];
+
+    const mcList = shuffle(raw.mc).map(item => ({
+      type: 'mc', q: item[0], correctAns: item[1][0], options: shuffle(item[1])
+    }));
+    const tfList = shuffle(raw.tf).map(item => ({
+      type: 'tf', ctx: item[0], q: item[1], correctAns: item[2], exp: item[3] || "Chính xác!"
+    }));
+
+    questions = [...mcList, ...tfList];
+    currentIndex = 0; score = 0; combo = 0; maxCombo = 0; correctCount = 0;
+
+    document.getElementById('homeScreen').classList.remove('active');
+    document.getElementById('resultScreen').classList.remove('active');
+    document.getElementById('gameScreen').classList.add('active');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const qObj = questions[currentIndex];
+    document.getElementById('scoreVal').innerText = score;
+    document.getElementById('comboVal').innerText = `🔥 Combo x${combo}`;
+    document.getElementById('qCountVal').innerText = `${currentIndex + 1}/${questions.length}`;
+    document.getElementById('progressBar').style.width = `${((currentIndex + 1) / questions.length) * 100}%`;
+
+    const roundBadge = document.getElementById('roundBadge');
+    const contextBox = document.getElementById('contextBox');
+    const container = document.getElementById('optionsContainer');
+    document.getElementById('feedbackBox').className = 'feedback-box';
+    document.getElementById('nextBtn').className = 'next-btn';
+    container.innerHTML = '';
+    document.getElementById('questionText').innerText = qObj.q;
+
+    if (qObj.type === 'mc') {
+      roundBadge.innerText = `CÔNG NGHỆ ${currentGrade} • VÒNG 1: TRẮC NGHIỆM`;
+      contextBox.style.display = 'none';
+      container.className = 'options-list';
+      qObj.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = opt;
+        btn.onclick = () => checkMC(btn, opt, qObj.correctAns);
+        container.appendChild(btn);
+      });
+    } else {
+      roundBadge.innerText = `CÔNG NGHỆ ${currentGrade} • VÒNG 2: ĐÚNG HAY SAI?`;
+      contextBox.style.display = 'block';
+      contextBox.innerText = `📌 Chủ đề: ${qObj.ctx}`;
+      container.className = 'tf-grid';
+      const btnT = document.createElement('button');
+      btnT.className = 'tf-btn'; btnT.innerText = '👍 ĐÚNG';
+      btnT.onclick = () => checkTF(btnT, true, qObj.correctAns, qObj.exp);
+      const btnF = document.createElement('button');
+      btnF.className = 'tf-btn'; btnF.innerText = '👎 SAI';
+      btnF.onclick = () => checkTF(btnF, false, qObj.correctAns, qObj.exp);
+      container.appendChild(btnT); container.appendChild(btnF);
+    }
+  }
+
+  function checkMC(btn, chosen, correct) {
+    document.querySelectorAll('.option-btn').forEach(b => {
+      b.disabled = true;
+      if (b.innerText === correct) b.classList.add('correct');
+    });
+    const fb = document.getElementById('feedbackBox');
+    if (chosen === correct) {
+      btn.classList.add('correct'); combo++; if (combo > maxCombo) maxCombo = combo; correctCount++;
+      let bonus = combo >= 3 ? 20 : 10; score += bonus;
+      fb.innerHTML = `✅ <strong>Chính xác!</strong> (+${bonus} điểm)`;
+      fb.className = 'feedback-box feedback-correct show';
+    } else {
+      btn.classList.add('wrong'); combo = 0;
+      fb.innerHTML = `❌ <strong>Chưa đúng!</strong> Hãy nhớ đáp án màu xanh nhé.`;
+      fb.className = 'feedback-box feedback-wrong show';
+    }
+    document.getElementById('scoreVal').innerText = score;
+    document.getElementById('comboVal').innerText = `🔥 Combo x${combo}`;
+    document.getElementById('nextBtn').classList.add('show');
+  }
+
+  function checkTF(btn, chosen, correct, exp) {
+    const btns = document.querySelectorAll('.tf-btn');
+    btns.forEach(b => b.disabled = true);
+    const fb = document.getElementById('feedbackBox');
+    if (chosen === correct) {
+      btn.classList.add('correct'); combo++; if (combo > maxCombo) maxCombo = combo; correctCount++;
+      let bonus = combo >= 3 ? 20 : 10; score += bonus;
+      fb.innerHTML = `✅ <strong>Tuyệt vời!</strong> (+${bonus} điểm)`;
+      fb.className = 'feedback-box feedback-correct show';
+    } else {
+      btn.classList.add('wrong'); btns[correct ? 0 : 1].classList.add('correct'); combo = 0;
+      fb.innerHTML = `❌ <strong>Sai mất rồi!</strong><br>💡 ${exp}`;
+      fb.className = 'feedback-box feedback-wrong show';
+    }
+    document.getElementById('scoreVal').innerText = score;
+    document.getElementById('comboVal').innerText = `🔥 Combo x${combo}`;
+    document.getElementById('nextBtn').classList.add('show');
+  }
+
+  function nextQuestion() {
+    currentIndex++;
+    if (currentIndex < questions.length) renderQuestion();
+    else showResults();
+  }
+
+  async function showResults() {
+    document.getElementById('gameScreen').classList.remove('active');
+    document.getElementById('resultScreen').classList.add('active');
+    document.getElementById('playerSummary').innerText = `${studentName} - Lớp ${studentClass} • Công nghệ ${currentGrade}`;
+    document.getElementById('finalScore').innerText = score;
+    document.getElementById('correctTotal').innerText = `${correctCount}/${questions.length}`;
+    document.getElementById('maxComboTotal').innerText = maxCombo;
+
+    let r = correctCount / questions.length;
+    let rank = r >= 0.9 ? "Tổng Công trình sư 👑" : r >= 0.75 ? "Kỹ sư Trưởng 🚀" : r >= 0.5 ? "Kỹ thuật viên ⚡" : "Kỹ sư Tập sự 🌱";
+    document.getElementById('rankTitle').innerText = rank;
+    document.getElementById('saveStatus').innerText = "⏳ Đang lưu điểm lên Bảng vàng...";
+
+    try {
+      const params = new URLSearchParams({
+        action: "saveScore",
+        grade: currentGrade,
+        name: studentName,
+        className: studentClass,
+        score: score,
+        correct: correctCount,
+        total: questions.length,
+        maxCombo: maxCombo,
+        rank: rank
+      });
+      const res = await fetch(`${SCRIPT_URL}?${params.toString()}`);
+      const topList = await res.json();
+      document.getElementById('saveStatus').innerText = "✅ Đã ghi nhận điểm vào hệ thống của Thầy!";
+      renderLeaderboardTable(topList, 'lbContent');
+    } catch (e) {
+      document.getElementById('saveStatus').innerText = "⚠️ Không thể lưu điểm do lỗi mạng.";
+    }
+  }
+
+  function renderLeaderboardTable(list, targetId) {
+    const el = document.getElementById(targetId);
+    if (!list || list.length === 0) { el.innerHTML = "<p style='padding:8px;text-align:center;'>Chưa có lượt ghi điểm nào.</p>"; return; }
+    let h = `<table class="lb-table"><thead><tr><th>#</th><th>Họ tên</th><th>Lớp</th><th>Điểm</th><th>Đúng</th></tr></thead><tbody>`;
+    list.forEach((it, i) => {
+      let m = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : (i + 1);
+      h += `<tr><td><b>${m}</b></td><td>${it.name}</td><td>${it.className}</td><td style="color:#4f46e5;font-weight:700;">${it.score}</td><td>${it.correct}</td></tr>`;
+    });
+    el.innerHTML = h + `</tbody></table>`;
+  }
+
+  async function viewTop(grade) {
+    const box = document.getElementById('homeLeaderboard');
+    box.style.display = 'block';
+    box.innerHTML = `<div class="lb-title">🏆 TOP 10 CÔNG NGHỆ ${grade}</div><div id="homeLbContent" style="text-align:center;font-size:0.82rem;">⏳ Đang tải...</div>`;
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=getLeaderboard&grade=${grade}`);
+      const list = await res.json();
+      renderLeaderboardTable(list, 'homeLbContent');
+    } catch (e) {
+      document.getElementById('homeLbContent').innerText = "⚠️ Lỗi tải bảng xếp hạng.";
+    }
+  }
+
+  function goHome() {
+    document.getElementById('resultScreen').classList.remove('active');
+    document.getElementById('homeScreen').classList.add('active');
+  }
+</script>
 </body>
 </html>
